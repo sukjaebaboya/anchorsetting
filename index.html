@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">
+    <meta name="naver-site-verification" content="f19e603cda1c4d8ba0d5c49bd7d8c209afc0b1c6" /> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta name="title" content="우리집자가진단시스템">
+    <meta name="subject" content="자가진단을 통한 안전한 주거생활">
+    <meta name="description" content="스마트폰으로 우리집에 발생한 균열을 자가진단 하고 안전한 주거생활을 누리세요.">
+    <meta name="keywords" content="경주, 포항, 후쿠시마, 균열, 안전, 지진, 하중, 크랙, 건물, 우리집, 자가진단, 인공지능, 위험도, 판독, 벽체균열, 기둥균열, 대책,우리집균열, 원인, 공유하기, 건축구조, 지진피해, 태풍, 재해,아파트균열,벽균열,바닥균열, 안전진단, 우리집, 균열, 탐지, 균열사진">
+    <meta name="author" content="허석재">
+    <meta name="mail" content="mill@dankook.ac.kr">
+    <title>인공지능 균열측정기 - 인공지능으로 균열이 위험한지 알아보세요</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="canonical" href="https://myhomecrackfound.netlify.app/">
+    <script data-ad-client="ca-pub-9231444876987540" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eb2082d012fa18b"></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LLEB9RM521"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-LLEB9RM521');
+</script>
+    
+</head>
+
+<body>
+     <ins class="kakao_ad_area" style="display:none;" 
+ data-ad-unit    = "DAN-1jiflq1va94j8" 
+ data-ad-width   = "320" 
+ data-ad-height  = "50"></ins> 
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+    <section class="section">
+        <h1 class="title">인공지능 지진균열위험도 판독기</h1>
+        <h2 class="subtitle">"지진으로 발생한 균열의 위험도를 판단할 수 있습니다."</h2>
+    </section>
+
+    <script class="jsbin" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+
+    <div class="image-upload-wrap">
+        <input class="file-upload-input" type='file' onchange="readURL(this);" accept="image/*" />
+        <div class="drag-text">
+            <img src="images/upload.svg" class="mt-5 pt-5 upload">
+            <h3 class="mb-5 pb-5 pt-4  upload-text">여기를 눌러서 균열부위 사진을 찍거나 눌러서 업로드하세요.</h3>
+        </div>
+    </div>
+    <div class="file-upload-content">
+        <img class="file-upload-image" id="crack-image" src="#" alt="your image" />
+        <div id="loading" class="animated bounce">
+            <div class="spinner-border" role="status">
+                <span class="Loading">생각중..</span>
+            </div>
+            <p class="text-center">AI가 당신의 사진을 분석 중 입니다.</p>
+            <p class="text-center">틀릴 수도 있어요. 열심히 배우는 중 입니다.</p>
+        </div>
+        <p class="result-message"></p>
+        <p class="result-message2"></p>
+        <div id="label-container"></div>
+            <!-- Go to www.addthis.com/dashboard to customize your tools -->            
+    <div class="addthis_inline_share_toolbox" id="kakao"></div>
+
+        <div class="image-title-wrap">
+            <button type="button" onclick="location.href='https://myhomecrackfound.netlify.app';" class="remove-image">지우고 다시하기</button>
+        </div>
+
+    </div>
+    <div>
+        <!-- 기능 -->
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+        <script>
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('.image-upload-wrap').hide();
+                        $('.file-upload-image').attr('src', e.target.result);
+                        $('.file-upload-content').show();
+                        $('.image-title').html(input.files[0].name);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                    init().then(() => {
+                        console.log("start1")
+                        predict().then(() => {
+                            init2().then(() => {
+                                predict2().then(() => {
+                                    resultsay()
+                                })
+                            })
+                        })
+                        $('#loading').hide();
+                    });
+                } else {
+                    removeUpload();
+                }
+            }
+
+            function removeUpload() {
+                $('.file-upload-input').replaceWith($('.file-upload-input').clone());
+                $('.file-upload-content').hide();
+                $('.image-upload-wrap').show();
+            }
+            $('.image-upload-wrap').bind('dragover', function() {
+                $('.image-upload-wrap').addClass('image-dropping');
+            });
+            $('.image-upload-wrap').bind('dragleave', function() {
+                $('.image-upload-wrap').removeClass('image-dropping');
+            });
+        </script>
+        <script type="text/javascript">
+            // 1차분석시작
+            let model, webcam, labelContainer, maxPredictions, result1;
+            let model2, webcam2, labelContainer2, maxPredictions2, result2;
+            let resultTitle, resultExplain, resultCeleb, title, result, analy;
+            async function init() {
+                const URL = "https://teachablemachine.withgoogle.com/models/cUW1JqsXU/";
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+                const flip = true;
+                labelContainer = document.getElementById("label-container");
+                for (let i = 0; i < maxPredictions; i++) { // and class labels
+                    labelContainer.appendChild(document.createElement("div"));
+                }
+            }
+            async function predict() {
+                var image = document.getElementById("crack-image")
+                const prediction = await model.predict(image, false);
+                prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
+                result1 = (prediction[0].className);
+                console.log(result1)
+            }
+            // 2차분석시작
+            async function init2() {
+                const URL2 = "https://teachablemachine.withgoogle.com/models/cUW1JqsXU/";
+                const modelURL2 = URL2 + "model.json";
+                const metadataURL2 = URL2 + "metadata.json";
+                model2 = await tmImage.load(modelURL2, metadataURL2);
+                maxPredictions2 = model2.getTotalClasses();
+                const flip2 = true;
+                labelContainer2 = document.getElementById("label-container");
+                for (let i = 0; i < maxPredictions2; i++) { // and class labels
+                    labelContainer2.appendChild(document.createElement("div"));
+                }
+            }
+            async function predict2() {
+                var image2 = document.getElementById("crack-image")
+                const prediction2 = await model2.predict(image2, false);
+                prediction2.sort((a2, b2) => parseFloat(b2.probability) - parseFloat(a2.probability));
+                result2 = (prediction2[0].className);
+                console.log(result2)
+            }
+            async function resultsay() {
+                const resultCom = (result1 + "+" + result2)
+                console.log(resultCom)
+                console.log("toc")
+                // switch (prediction[0].className) {
+                switch (resultCom) {
+                    case "m16+m16":
+                        resultTitle = "정상설치 M16 앵커"
+                        resultExplain = "이상없음"
+                        resultCeleb = "M16 강도"
+                        break;
+                    case "m20+m20":
+                        resultTitle = "정상설치 M20 앵커"
+                        resultExplain = "이상없음"
+                        resultCeleb = "M20 강도"
+                        break;
+                    case "nobolt+nobolt":
+                        resultTitle = "볼트설치불량"
+                        resultExplain = ""
+                        resultCeleb = ""
+                        break;
+                    case "noset+noset":
+                        resultTitle = "설치불량"
+                        resultExplain = ""
+                        resultCeleb = ""
+                        break;
+                    case "nowasher+nowasher":
+                        resultTitle = "와셔설치불량"
+                        resultExplain = ""
+                        resultCeleb = ""
+                        break;
+                    default:
+                        resultTitle = "오류"
+                        resultExplain = "다시 찍어주세요."
+                        resultCeleb = " "
+                        //code
+                }
+                // var title = "<div class='" + prediction[0].className + "'>" + resultTitle + "</div>"
+                // var result = "<div class='" + prediction[0].className + "'>" + resultExplain + "</div>"
+                // var analy = "<div class='" + prediction[0].className + "'>" + resultCeleb + "</div>"
+                title = "<div class='" + resultCom + "'>" + resultTitle + "</div>"
+                result = "<div class='" + resultCom + "'>" + resultExplain + "</div>"
+                analy = "<div class='" + resultCom + "'>" + resultCeleb + "</div>"
+                $('.result-message').html(title);
+                $('.result-message2').html(result + analy);
+                // for (let i = 0; i < maxPredictions; i++) {
+                //   const classPrediction =
+                //  prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                // labelContainer.childNodes[i].innerHTML = classPrediction;
+                // }
+               
+            }
+        </script>
+
+          
+            
+    </div>
+
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        /*
+        var disqus_config = function () {
+        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        */
+        (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document,
+                s = d.createElement('script');
+            s.src = 'https://myhomecrackfound.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the
+        <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+    </noscript>
+<ins class="kakao_ad_area" style="display:none;" 
+ data-ad-unit    = "DAN-1iykhjpk25dfa" 
+ data-ad-width   = "320" 
+ data-ad-height  = "100"></ins> 
+<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+<script data-ad-client="ca-pub-9231444876987540" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <p class="text-copy">&copy; 허석재 ver.1.0.0 All Rights Reserved.   </p>
+    <p class="text-copy"> 문의 : mill@dankook.ac.kr </p>
+    <!-- Go to www.addthis.com/dashboard to customize your tools -->
+    <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5eb2082d012fa18b"></script>
+
+</body>
+
+</html>
