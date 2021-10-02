@@ -33,11 +33,7 @@
 </head>
 
 <body>
-     <ins class="kakao_ad_area" style="display:none;" 
- data-ad-unit    = "DAN-1jiflq1va94j8" 
- data-ad-width   = "320" 
- data-ad-height  = "50"></ins> 
-<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+    
     <section class="section">
         <h1 class="title">앵커상태진단인공지능</h1>
         <h2 class="subtitle">"앵커의 설치 상태를 점검할 수 있습니다."</h2>
@@ -53,7 +49,7 @@
         </div>
     </div>
     <div class="file-upload-content">
-        <img class="file-upload-image" id="crack-image" src="#" alt="your image" />
+        <img class="file-upload-image" id="anchor-image" src="#" alt="your image" />
         <div id="loading" class="animated bounce">
             <div class="spinner-border" role="status">
                 <span class="Loading">생각중..</span>
@@ -63,12 +59,13 @@
         </div>
         <p class="result-message"></p>
         <p class="result-message2"></p>
+        <p class="holderOfImage"></p>
         <div id="label-container"></div>
             <!-- Go to www.addthis.com/dashboard to customize your tools -->            
     <div class="addthis_inline_share_toolbox" id="kakao"></div>
 
         <div class="image-title-wrap">
-            <button type="button" onclick="location.href='https://myhomecrackfound.netlify.app';" class="remove-image">지우고 다시하기</button>
+            <button type="button" onclick="location.href='https://anchorstatus.netlify.app/';" class="remove-image">지우고 다시하기</button>
         </div>
 
     </div>
@@ -76,7 +73,7 @@
         <!-- 기능 -->
         <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-
+  
         <script>
             function readURL(input) {
                 if (input.files && input.files[0]) {
@@ -123,6 +120,7 @@
             let resultTitle, resultExplain, resultCeleb, title, result, analy;
             async function init() {
                 const URL = "https://teachablemachine.withgoogle.com/models/cUW1JqsXU/";
+                //const URL = "E:\02 ML-anchor\anchorsw\model";
                 const modelURL = URL + "model.json";
                 const metadataURL = URL + "metadata.json";
                 model = await tmImage.load(modelURL, metadataURL);
@@ -134,15 +132,17 @@
                 }
             }
             async function predict() {
-                var image = document.getElementById("crack-image")
+                var image = document.getElementById("anchor-image")
                 const prediction = await model.predict(image, false);
                 prediction.sort((a, b) => parseFloat(b.probability) - parseFloat(a.probability));
                 result1 = (prediction[0].className);
                 console.log(result1)
             }
-            // 2차분석시작
-            async function init2() {
-                const URL2 = "https://teachablemachine.withgoogle.com/models/cUW1JqsXU/";
+           
+           // 2차분석시작
+           async function init2() {
+                const URL2 = "https://teachablemachine.withgoogle.com/models/YgwhvXYz-/";
+                //const URL = "E:\02 ML-anchor\anchorsw\model";
                 const modelURL2 = URL2 + "model.json";
                 const metadataURL2 = URL2 + "metadata.json";
                 model2 = await tmImage.load(modelURL2, metadataURL2);
@@ -154,7 +154,7 @@
                 }
             }
             async function predict2() {
-                var image2 = document.getElementById("crack-image")
+                var image2 = document.getElementById("anchor-image")
                 const prediction2 = await model2.predict(image2, false);
                 prediction2.sort((a2, b2) => parseFloat(b2.probability) - parseFloat(a2.probability));
                 result2 = (prediction2[0].className);
@@ -166,28 +166,28 @@
                 console.log("toc")
                 // switch (prediction[0].className) {
                 switch (resultCom) {
-                    case "m16+m16":
-                        resultTitle = "정상설치 M16 앵커"
+                    case "m16+negative":
+                        resultTitle = "비균열 M16 앵커"
                         resultExplain = "이상없음"
-                        resultCeleb = "M16 강도"
+                        resultCeleb = "M16 1개 강도"
                         break;
-                    case "m20+m20":
-                        resultTitle = "정상설치 M20 앵커"
+                    case "m16+positive":
+                        resultTitle = "균열 M16 앵커"
                         resultExplain = "이상없음"
-                        resultCeleb = "M20 강도"
+                        resultCeleb = "M16 1개 강도"
                         break;
-                    case "nobolt+nobolt":
+                    case "m20+positive":
+                        resultTitle = "균열 M20 앵커"
+                        resultExplain = "이상없음"
+                        resultCeleb = "M20 1개 강도"
+                        break;
+                    case "m20+nagative":
+                        resultTitle = "비균열 M20 앵커"
+                        resultExplain = "이상없음"
+                        resultCeleb = "M20 1개 강도"
+                        break;
+                    case "nobolt+positive","nobolt+nagative""noset+positive","noset+nagative""nowasher+positive","nowasher+nagative":
                         resultTitle = "볼트설치불량"
-                        resultExplain = ""
-                        resultCeleb = ""
-                        break;
-                    case "noset+noset":
-                        resultTitle = "설치불량"
-                        resultExplain = ""
-                        resultCeleb = ""
-                        break;
-                    case "nowasher+nowasher":
-                        resultTitle = "와셔설치불량"
                         resultExplain = ""
                         resultCeleb = ""
                         break;
@@ -210,41 +210,20 @@
                 //  prediction[i].className + ": " + prediction[i].probability.toFixed(2);
                 // labelContainer.childNodes[i].innerHTML = classPrediction;
                 // }
+
+        
+
                
-            }
-        </script>
+            } </script>
 
-          
-            
-    </div>
 
-    <div id="disqus_thread"></div>
-    <script>
-        /**
-         *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
-         *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
-        /*
-        var disqus_config = function () {
-        this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
-        };
-        */
-        (function() { // DON'T EDIT BELOW THIS LINE
-            var d = document,
-                s = d.createElement('script');
-            s.src = 'https://myhomecrackfound.disqus.com/embed.js';
-            s.setAttribute('data-timestamp', +new Date());
-            (d.head || d.body).appendChild(s);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the
-        <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
-    </noscript>
-<ins class="kakao_ad_area" style="display:none;" 
- data-ad-unit    = "DAN-1iykhjpk25dfa" 
- data-ad-width   = "320" 
- data-ad-height  = "100"></ins> 
-<script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+
+
+
+
+
+
+
 <script data-ad-client="ca-pub-9231444876987540" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <p class="text-copy">&copy; 허석재 ver.1.0.0 All Rights Reserved.   </p>
     <p class="text-copy"> 문의 : mill@dankook.ac.kr </p>
